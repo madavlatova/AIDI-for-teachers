@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Каталог российских и доступных без VPN цифровых и ИИ-инструментов преподавателя: паспорта, маршруты задач, промпты по TRACI.">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Каталог инструментов преподавателя</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Golos+Text:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap">
+<style>
+/* Layout: путь пользователя сверху вниз. Кто вы → что нужно сделать (задачи по этапам занятия) → инструменты → паспорт и маршрут в окне → мой набор. */
+:root {
+  --bg: #FBFAF7; --surface: #FFFFFF; --sunk: #F2EFE8; --fg: #1B1F24; --muted: #555B63; --rule: #CFCBC2;
+  --accent: #C25E1F; --accent-soft: #F8E6D6; --ok: #2B6E62; --ok-soft: #DDEFEA; --ink: #1F3A5F;
+  --g-ai: #1F3A5F; --g-ai-fg: #FFFFFF; --g-src: #3F6A96; --g-src-fg: #FFFFFF;
+  --g-board: #E07B39; --g-board-fg: #1B1F24; --g-quiz: #F3D9A4; --g-quiz-fg: #1B1F24;
+  --g-plat: #FFFFFF; --g-plat-fg: #1B1F24; --g-video: #E4E8EC; --g-video-fg: #1B1F24;
+  --font-display: 'Unbounded', 'Arial Black', sans-serif;
+  --font-body: 'Golos Text', 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181C; --surface: #1D2126; --sunk: #252A30; --fg: #ECE9E2; --muted: #A9AFB7; --rule: #3A4048;
+    --accent: #F0955A; --accent-soft: #3A2A1F; --ok: #6FC1AE; --ok-soft: #1E3530; --ink: #9DBBE0;
+    --g-ai: #3C5F8C; --g-ai-fg: #FFFFFF; --g-src: #5A86B4; --g-src-fg: #0F1419;
+    --g-board: #E8894B; --g-board-fg: #15181C; --g-quiz: #E2C58A; --g-quiz-fg: #15181C;
+    --g-plat: #1D2126; --g-plat-fg: #ECE9E2; --g-video: #2E343B; --g-video-fg: #ECE9E2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181C; --surface: #1D2126; --sunk: #252A30; --fg: #ECE9E2; --muted: #A9AFB7; --rule: #3A4048;
+  --accent: #F0955A; --accent-soft: #3A2A1F; --ok: #6FC1AE; --ok-soft: #1E3530; --ink: #9DBBE0;
+  --g-ai: #3C5F8C; --g-ai-fg: #FFFFFF; --g-src: #5A86B4; --g-src-fg: #0F1419;
+  --g-board: #E8894B; --g-board-fg: #15181C; --g-quiz: #E2C58A; --g-quiz-fg: #15181C;
+  --g-plat: #1D2126; --g-plat-fg: #ECE9E2; --g-video: #2E343B; --g-video-fg: #ECE9E2;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+.wrap { max-width: 1160px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+a { color: var(--accent); }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+h1, h2, h3 { text-wrap: balance; }
+.eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Hero */
+.hero { padding-block: 36px 28px; }
+.topline { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; align-items: baseline; }
+.hero h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5.4vw, 54px); line-height: 1.05; margin: 14px 0 12px; max-width: 16ch; }
+.hero .lead { margin: 0; max-width: 62ch; color: var(--muted); font-size: 16px; }
+.persona { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1.5px solid var(--fg); border-radius: 12px; overflow: hidden; }
+.seg button { border: 0; background: var(--surface); padding: 10px 16px; cursor: pointer; font-weight: 500; min-height: 44px; }
+.seg button + button { border-left: 1.5px solid var(--fg); }
+.seg button[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+
+/* How it works */
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; border-block: 1.5px solid var(--fg); margin-bottom: 30px; }
+.how div { padding: 14px 18px 14px 0; display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+.how div + div { padding-left: 18px; border-left: 1px solid var(--rule); }
+.how b { font-family: var(--font-display); font-size: 22px; color: var(--accent); line-height: 1.1; }
+.how span { font-size: 14px; }
+.how strong { display: block; font-size: 14.5px; }
+@media (max-width: 720px) { .how { grid-template-columns: 1fr; } .how div + div { padding-left: 0; border-left: 0; border-top: 1px solid var(--rule); } }
+
+/* Tasks */
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.section-head h2 { font-family: var(--font-display); font-weight: 500; font-size: 22px; margin: 0; }
+.stages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-bottom: 36px; }
+@media (max-width: 760px) { .stages { grid-template-columns: 1fr; } }
+.stage h3 { margin: 0 0 10px; font-size: 14px; display: flex; gap: 10px; align-items: center; }
+.stage h3 i { font-style: normal; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 12px; background: var(--fg); color: var(--bg); }
+.stage h3 small { font-weight: 400; color: var(--muted); font-size: 13px; }
+.tasks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+@media (max-width: 420px) { .tasks { grid-template-columns: 1fr; } }
+.task { text-align: left; border: 1.5px solid var(--rule); background: var(--surface); border-radius: 12px; padding: 12px 14px; cursor: pointer; display: flex; flex-direction: column; gap: 4px; min-height: 76px; }
+.task:hover { border-color: var(--fg); }
+.task[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1.5px var(--accent); background: var(--accent-soft); }
+.task b { font-size: 15px; font-weight: 600; line-height: 1.3; }
+.task span { font-size: 12.5px; color: var(--muted); }
+.task .r { color: var(--accent); font-weight: 600; }
+.later { border: 1.5px dashed var(--rule); border-radius: 12px; padding: 12px 14px; font-size: 13px; color: var(--muted); margin-top: 10px; }
+
+/* Results */
+.results { scroll-margin-top: 12px; }
+.bar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 12px; }
+.bar input[type="search"] { flex: 1 1 260px; min-width: 0; padding: 11px 14px; border: 1.5px solid var(--fg); border-radius: 10px; background: var(--surface); color: var(--fg); font: inherit; }
+.toggle { display: inline-flex; gap: 8px; align-items: center; font-size: 14px; cursor: pointer; min-height: 44px; }
+.toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; }
+.chip { font-size: 13px; padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--rule); background: var(--surface); cursor: pointer; min-height: 36px; display: inline-flex; align-items: center; gap: 6px; }
+.chip:hover { border-color: var(--fg); }
+.chip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.dot { width: 12px; height: 12px; border-radius: 3px; display: inline-block; }
+.dot.plat, .dot.video { border: 1.5px solid var(--fg); }
+.status { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; font-size: 13.5px; color: var(--muted); margin-bottom: 14px; }
+.status strong { color: var(--fg); }
+.linkbtn { background: none; border: 0; color: var(--accent); text-decoration: underline; cursor: pointer; padding: 0; font-size: 13.5px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 40px; }
+@media (max-width: 420px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--surface); border: 1.5px solid var(--fg); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.card-top { display: flex; gap: 12px; align-items: flex-start; }
+.tile { width: 62px; height: 68px; flex-shrink: 0; border-radius: 8px; padding: 5px 6px; display: flex; flex-direction: column; justify-content: space-between; font-size: 10.5px; font-weight: 600; }
+.tile .sym { font-family: var(--font-display); font-weight: 700; font-size: 22px; line-height: 1; }
+.tile.big { width: 96px; height: 106px; padding: 8px 9px; font-size: 12px; }
+.tile.big .sym { font-size: 36px; }
+.g-ai { background: var(--g-ai); color: var(--g-ai-fg); } .g-src { background: var(--g-src); color: var(--g-src-fg); }
+.g-board { background: var(--g-board); color: var(--g-board-fg); } .g-quiz { background: var(--g-quiz); color: var(--g-quiz-fg); }
+.g-plat { background: var(--g-plat); color: var(--g-plat-fg); border: 1.5px solid var(--fg); } .g-video { background: var(--g-video); color: var(--g-video-fg); border: 1.5px solid var(--fg); }
+.head { min-width: 0; flex: 1; }
+.name { font-family: var(--font-display); font-weight: 500; font-size: 17px; line-height: 1.2; margin: 0 0 4px; }
+.badges { display: flex; flex-wrap: wrap; gap: 5px; }
+.badge { font-size: 11.5px; font-weight: 600; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--rule); color: var(--muted); }
+.badge.ru { border-color: var(--fg); color: var(--fg); }
+.badge.ai { background: var(--accent-soft); border-color: transparent; color: var(--fg); }
+.badge.route { background: var(--ok-soft); border-color: transparent; color: var(--fg); }
+.star { width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; border: 1.5px solid var(--rule); background: var(--surface); cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.star svg { width: 20px; height: 20px; fill: none; stroke: var(--fg); stroke-width: 1.8; }
+.star[aria-pressed="true"] { border-color: var(--accent); }
+.star[aria-pressed="true"] svg { fill: var(--accent); stroke: var(--accent); }
+.card p { margin: 0; font-size: 14px; }
+.sts { display: flex; flex-wrap: wrap; gap: 5px; }
+.st { font-size: 12px; padding: 2px 8px; border-radius: 6px; background: var(--sunk); }
+.open { margin-top: auto; align-self: stretch; border: 1.5px solid var(--fg); background: var(--fg); color: var(--bg); border-radius: 10px; padding: 10px 12px; font-weight: 600; cursor: pointer; min-height: 44px; display: flex; justify-content: space-between; align-items: center; }
+.open:hover { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.empty { grid-column: 1 / -1; padding: 30px; text-align: center; color: var(--muted); border: 1.5px dashed var(--rule); border-radius: 14px; }
+
+/* Kit */
+.kit { border: 1.5px solid var(--fg); border-radius: 16px; padding: 18px; margin-bottom: 36px; background: var(--surface); }
+.kit-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.kit-item { display: inline-flex; align-items: center; gap: 8px; border: 1.5px solid var(--rule); border-radius: 10px; padding: 6px 10px 6px 6px; background: var(--bg); cursor: pointer; min-height: 44px; }
+.kit-item .tile { width: 32px; height: 32px; padding: 0; justify-content: center; align-items: center; }
+.kit-item .tile .sym { font-size: 13px; }
+.kit-item em { font-style: normal; font-size: 12px; color: var(--ok); font-weight: 600; }
+
+/* Explainers */
+.explain { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin-bottom: 36px; }
+@media (max-width: 760px) { .explain { grid-template-columns: 1fr; } }
+.panel { border-top: 1.5px solid var(--fg); padding-top: 14px; }
+.panel h2 { font-family: var(--font-display); font-weight: 500; font-size: 19px; margin: 0 0 10px; }
+.traci-row { display: grid; grid-template-columns: 40px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; }
+.traci-row b.l { font-family: var(--font-display); font-size: 22px; color: var(--accent); line-height: 1.1; }
+.traci-row small { color: var(--muted); }
+ol.qs { margin: 0; padding: 0; list-style: none; counter-reset: q; }
+ol.qs li { counter-increment: q; display: grid; grid-template-columns: 40px 1fr; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 14px; }
+ol.qs li::before { content: counter(q); font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--accent); line-height: 1.1; }
+ol.qs span { display: block; color: var(--muted); }
+.dt { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; margin-bottom: 36px; }
+@media (max-width: 860px) { .dt { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 420px) { .dt { grid-template-columns: 1fr; } }
+.dt div { background: var(--sunk); border-radius: 12px; padding: 12px; font-size: 13.5px; }
+.dt b { display: block; font-family: var(--font-display); font-weight: 500; font-size: 14px; margin-bottom: 4px; }
+footer { border-top: 1.5px solid var(--fg); padding-block: 18px 34px; font-size: 13px; color: var(--muted); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
+
+/* Dialog */
+dialog { border: 0; padding: 0; width: min(860px, calc(100vw - 24px)); max-height: calc(100vh - 24px); border-radius: 18px; background: var(--bg); color: var(--fg); box-shadow: 0 30px 80px rgba(0,0,0,0.35); }
+dialog::backdrop { background: rgba(15, 20, 25, 0.55); }
+@media (max-width: 600px) { dialog { width: 100vw; max-width: 100vw; max-height: 100vh; height: 100%; border-radius: 0; margin: 0; } }
+.dlg { display: flex; flex-direction: column; max-height: inherit; height: 100%; }
+.dlg-head { display: flex; gap: 14px; align-items: flex-start; padding: 18px 20px; border-bottom: 1.5px solid var(--fg); background: var(--surface); padding-top: max(18px, env(safe-area-inset-top, 0px)); }
+.dlg-head h2 { font-family: var(--font-display); font-weight: 500; font-size: 24px; margin: 2px 0 6px; }
+.dlg-head .url { font-size: 13.5px; overflow-wrap: anywhere; }
+.close { margin-left: auto; width: 44px; height: 44px; border-radius: 10px; border: 1.5px solid var(--fg); background: var(--surface); cursor: pointer; font-size: 22px; line-height: 1; flex-shrink: 0; }
+.dlg-body { overflow-y: auto; padding: 18px 20px 26px; display: flex; flex-direction: column; gap: 18px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; border-bottom: 1.5px solid var(--rule); }
+.tab { border: 0; background: none; padding: 10px 14px; cursor: pointer; font-weight: 600; border-bottom: 3px solid transparent; margin-bottom: -1.5px; min-height: 44px; }
+.tab[aria-selected="true"] { border-bottom-color: var(--accent); color: var(--accent); }
+.sub { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+.pp { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; }
+@media (max-width: 600px) { .pp { grid-template-columns: 1fr; } }
+.pp ul { margin: 0; padding-left: 18px; }
+.facts { display: flex; flex-direction: column; gap: 8px; font-size: 14px; }
+.facts div { display: flex; flex-direction: column; border-bottom: 1px solid var(--rule); padding-bottom: 6px; }
+.facts span { font-size: 12px; color: var(--muted); }
+.route-title { font-family: var(--font-display); font-weight: 500; font-size: 19px; line-height: 1.3; margin: 0; }
+.rmeta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1.5px solid var(--fg); font-size: 13.5px; }
+@media (max-width: 600px) { .rmeta { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.rmeta div { padding: 7px 10px; display: flex; flex-direction: column; }
+.rmeta div + div { border-left: 1px solid var(--rule); }
+.rmeta span { font-size: 12px; color: var(--muted); }
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: flex; flex-direction: column; gap: 12px; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 32px 1fr; gap: 10px; }
+ol.steps li::before { content: counter(s); font-family: var(--font-display); font-weight: 700; font-size: 22px; color: var(--accent); line-height: 1.1; }
+ol.steps b { display: block; }
+ol.steps span { color: var(--muted); font-size: 14px; }
+.prompt { background: var(--sunk); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 4px; }
+.prow { display: grid; grid-template-columns: 30px 1fr; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--rule); }
+.prow:last-of-type { border-bottom: 0; }
+.prow b { font-family: var(--font-display); font-size: 17px; color: var(--accent); }
+.prow small { display: block; font-size: 11.5px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.prow span { font-family: var(--font-mono); font-size: 13px; line-height: 1.55; overflow-wrap: anywhere; }
+.copy { align-self: flex-start; margin-top: 8px; border: 1.5px solid var(--fg); background: var(--surface); border-radius: 10px; padding: 8px 14px; font-weight: 600; cursor: pointer; min-height: 44px; }
+.two { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+.checks { border: 1.5px solid var(--ok); border-radius: 12px; padding: 12px 14px; }
+.checks .sub { color: var(--ok); }
+.checks label { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; padding: 4px 0; cursor: pointer; }
+.checks input { margin-top: 4px; width: 16px; height: 16px; accent-color: var(--ok); }
+.progress { font-size: 12.5px; color: var(--ok); font-weight: 600; margin-top: 4px; }
+.stop { background: var(--fg); color: var(--bg); border-radius: 12px; padding: 12px 14px; font-size: 14px; }
+.stop .sub { color: var(--g-quiz); }
+.vari { font-size: 14px; }
+.mark { display: flex; flex-wrap: wrap; gap: 8px; border-top: 1.5px dashed var(--rule); padding-top: 14px; }
+.mark button { border: 1.5px solid var(--rule); background: var(--surface); border-radius: 999px; padding: 8px 14px; cursor: pointer; min-height: 44px; }
+.mark button[aria-pressed="true"] { border-color: var(--ok); background: var(--ok-soft); }
+@media (prefers-reduced-motion: no-preference) { .task, .card, .chip { transition: border-color 0.15s, background 0.15s; } }
+</style>
+
+</head>
+<body>
+<header class="hero wrap">
+  <div class="topline">
+    <span class="eyebrow">Приложение к методическому пособию</span>
+    <span class="eyebrow">Обновлено: <span id="upd"></span></span>
+  </div>
+  <h1>Что вам нужно сделать?</h1>
+  <p class="lead">Каталог цифровых и ИИ-инструментов преподавателя: только российские сервисы и сервисы, доступные без VPN. Выберите задачу, и каталог покажет инструменты, их паспорта и пошаговые маршруты.</p>
+  <div class="persona" role="group" aria-label="Для кого подбирать">
+    <span class="eyebrow">Я работаю</span>
+    <div class="seg" id="persona">
+      <button type="button" data-v="all" aria-pressed="true">везде</button>
+      <button type="button" data-v="school" aria-pressed="false">в школе</button>
+      <button type="button" data-v="uni" aria-pressed="false">в вузе</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="how" aria-label="Как пользоваться каталогом">
+    <div><b>1</b><span><strong>Выберите задачу</strong>до занятия или во время него</span></div>
+    <div><b>2</b><span><strong>Откройте паспорт</strong>что это за инструмент и зачем он</span></div>
+    <div><b>3</b><span><strong>Пройдите маршрут</strong>шаги, промпт по TRACI и чек-лист</span></div>
+  </section>
+
+  <section aria-labelledby="tasksTitle">
+    <div class="section-head"><h2 id="tasksTitle">Задачи преподавателя</h2><button class="linkbtn" type="button" id="clearTask">Показать все инструменты</button></div>
+    <div class="stages" id="stages"></div>
+  </section>
+
+  <section class="results" id="results" aria-labelledby="resTitle">
+    <div class="section-head"><h2 id="resTitle">Инструменты</h2></div>
+    <div class="bar">
+      <label for="q" class="sr">Поиск по каталогу</label>
+      <input id="q" type="search" placeholder="Поиск: название или задача, например «анкета»">
+      <label class="toggle" for="onlyRoutes"><input id="onlyRoutes" type="checkbox"> С маршрутами</label>
+      <label class="toggle" for="onlyAi"><input id="onlyAi" type="checkbox"> С ИИ</label>
+    </div>
+    <div class="chips" id="groups"></div>
+    <div class="status"><span id="count"></span><button class="linkbtn" type="button" id="reset">Сбросить всё</button></div>
+    <div class="grid" id="grid" aria-live="polite"></div>
+  </section>
+
+  <section class="kit" aria-labelledby="kitTitle">
+    <div class="section-head" style="margin-bottom:4px"><h2 id="kitTitle">Мой набор</h2><span class="eyebrow">хранится в этом браузере</span></div>
+    <div id="kit"></div>
+  </section>
+
+  <section class="explain">
+    <div class="panel" id="traci">
+      <h2>Промпты по TRACI</h2>
+      <p style="margin:0 0 8px;font-size:14px;color:var(--muted)">Каждый промпт в маршрутах собран из пяти блоков. Замените текст в квадратных скобках на свои данные.</p>
+      <div id="traciRows"></div>
+    </div>
+    <div class="panel" id="voprosy">
+      <h2>Пять вопросов перед выбором</h2>
+      <ol class="qs">
+        <li><div><b>Какую дидактическую задачу я решаю?</b><span>Если задачу нельзя назвать, инструмент, скорее всего, не нужен.</span></div></li>
+        <li><div><b>С сервисом будут работать сами учащиеся?</b><span>Если нет, это инструмент педагога: проверьте результат до занятия.</span></div></li>
+        <li><div><b>Нужно вводить персональные данные учащихся?</b><span>Ищите вход по коду или ссылке. Сверьтесь с правилами организации.</span></div></li>
+        <li><div><b>Сервис доступен всем учащимся с их устройств?</b><span>Проверьте заранее на телефоне и на компьютере в аудитории.</span></div></li>
+        <li><div><b>ИИ сделает за учащегося то, чему он должен научиться?</b><span>Тогда выберите режим «без ИИ» или «ИИ как тьютор».</span></div></li>
+      </ol>
+    </div>
+  </section>
+
+  <section aria-labelledby="dtTitle">
+    <div class="section-head"><h2 id="dtTitle">Как устроен каталог</h2><span class="eyebrow">по этапам дизайн-мышления</span></div>
+    <div class="dt">
+      <div><b>Эмпатия</b>Вход через роль и задачу преподавателя, а не через список сервисов.</div>
+      <div><b>Фокусировка</b>Двенадцать задач по этапам занятия: до и во время.</div>
+      <div><b>Идеи</b>Паспорт коротко показывает, для чего подходит инструмент.</div>
+      <div><b>Прототип</b>Маршрут на 15–60 минут позволяет попробовать сразу.</div>
+      <div><b>Тест</b>Чек-листы, стоп-сигналы и отметки «попробовал» в моём наборе.</div>
+    </div>
+  </section>
+</main>
+
+<footer class="wrap">
+  <span>Сервисы меняют условия и названия. Перед использованием сверяйтесь с сайтом сервиса.</span>
+  <span>Прямая ссылка на инструмент: адрес каталога + #id, например #gigachat</span>
+</footer>
+
+<dialog id="dlg" aria-labelledby="dlgTitle"><div class="dlg" id="dlgInner"></div></dialog>
+
+<script>
+const DATA = {"updated":"ноябрь 2026","groups":{"ai":"ИИ-ассистенты","src":"Источники и тексты","board":"Доски и визуализация","quiz":"Задания и опросы","plat":"Курсы и среда","video":"Видеосвязь"},"stations":[{"id":"auditoriya","name":"Анализ аудитории","line":"before"},{"id":"rezultaty","name":"Цели и результаты","line":"before"},{"id":"struktura","name":"Структура курса","line":"before"},{"id":"soderzhanie","name":"Отбор содержания","line":"before"},{"id":"zadaniya","name":"Задания","line":"before"},{"id":"otsenivanie","name":"Оценивание и рубрики","line":"before"},{"id":"naglyadnost","name":"Объяснение и наглядность","line":"during"},{"id":"oprosy","name":"Опросы и обсуждение","line":"during"},{"id":"sovmestno","name":"Совместная работа","line":"during"},{"id":"praktika","name":"Практика и тренировка","line":"during"},{"id":"tyutor","name":"ИИ-тьютор","line":"during"},{"id":"onlayn","name":"Онлайн-занятие","line":"during"}],"traci":[{"k":"T","name":"Задача","en":"Task","hint":"что именно нужно сделать"},{"k":"R","name":"Роль","en":"Role","hint":"в роли какого специалиста отвечает ИИ"},{"k":"A","name":"Аудитория","en":"Audience","hint":"для кого результат"},{"k":"C","name":"Формат","en":"Create","hint":"в каком виде нужен ответ"},{"k":"I","name":"Цель","en":"Intent","hint":"зачем это нужно и как будет использовано"}],"tools":[{"id":"gigachat","code":"Gc","name":"ГигаЧат","url":"https://giga.chat","group":"ai","ru":true,"ai":true,"level":"both","what":"Российская большая языковая модель от Сбера. Пишет и редактирует тексты, генерирует изображения, работает с загруженными файлами.","why":["черновики тем, модулей и образовательных результатов","идеи заданий, вопросов для обсуждения и критериев оценивания","адаптация текста под уровень аудитории"],"stations":["rezultaty","zadaniya","otsenivanie","tyutor","naglyadnost"],"facts":{"Вход":"Сбер ID или телефон","Стоимость":"бесплатно для частных лиц"},"routes":[{"title":"Сформулировать образовательные результаты курса","station":"rezultaty","time":"20–30 мин","difficulty":2,"mode":"ИИ как инструмент педагога","need":"описание программы и компетенций, список модулей курса","steps":[["Соберите контекст","Выпишите компетенции программы, модули курса и особенности аудитории. Без контекста ИИ выдаст общие формулировки."],["Заполните промпт","Подставьте свои данные во все пять блоков TRACI. Особенно важен блок «Цель»: он объясняет ИИ, как будет использован результат."],["Отредактируйте сами","Уберите неизмеримые глаголы, объедините повторы, добавьте то, что важно именно вам."],["Сверьте согласованность","У каждого результата должны быть своё задание и критерий оценивания. Если их нет, результат нужно переформулировать или убрать."]],"prompt":{"T":"Сформулируй образовательные результаты для курса «[название]» по каждому из модулей: [перечислите модули]. Опирайся на компетенции образовательной программы: [вставьте формулировки].","R":"Ты методист высшей школы с опытом проектирования курсов по принципу конструктивной согласованности результатов, заданий и оценивания.","A":"Результаты будут читать магистранты направления «Педагогическое образование» ([курс, опыт работы в школе, уровень цифровой грамотности]) и эксперты при оценке программы.","C":"Таблица: модуль | результат (глагол действия + объект + условие) | уровень по таксономии Блума | связанная компетенция | как проверить. По 2–3 результата на модуль. Не используй глаголы «знать», «понимать», «ознакомиться». После таблицы перечисли компетенции, которые остались непокрытыми.","I":"Это черновик: на его основе я спроектирую задания и критерии оценивания, поэтому каждый результат должен быть наблюдаемым и проверяемым."},"checks":["результат можно наблюдать и оценить","есть связь с компетенциями программы","уровень соответствует аудитории","для каждого результата есть задание и критерий"],"stop":["глаголы «знать», «понимать» без уточнения","результаты не связаны с компетенциями","ссылки на несуществующие документы"],"school":"Укажите в блоке «Задача» ФГОС ООО и попросите предметные, метапредметные и личностные результаты.","students":"Пусть студенты сначала сформулируют результаты сами, а затем сравнят их с вариантом ИИ и обоснуют, какие формулировки сильнее."}]},{"id":"alisa","code":"Al","name":"Алиса AI","url":"https://alice.yandex.ru","group":"ai","ru":true,"ai":true,"level":"both","what":"Нейросеть Яндекса, бывший «Чат с Алисой». С октября 2025 года модели YandexGPT выходят под названием Alice AI. Отвечает на вопросы, распознаёт текст, таблицы и формулы на изображениях.","why":["структура занятий и презентаций","разноуровневые варианты одного задания","перевод формул и таблиц с фото в текст"],"stations":["struktura","zadaniya","tyutor","rezultaty"],"facts":{"Вход":"Яндекс ID","Где":"сайт и приложение «Алиса»"},"routes":[{"title":"Сделать три уровня одного задания","station":"zadaniya","time":"15–20 мин","difficulty":2,"mode":"ИИ как инструмент педагога","need":"задание, которое уже работает на ваших занятиях","steps":[["Возьмите своё задание","Начните с задания, которое уже проверено на практике, и сформулируйте, какой результат оно проверяет."],["Заполните промпт","В блоке «Аудитория» опишите, в чём именно учащиеся испытывают трудности: это определит, какие опоры предложит ИИ."],["Решите все варианты сами","ИИ может ошибаться и в ответах, и в оценке сложности."],["Доработайте опоры","Для базового уровня оставьте подсказку или образец, для продвинутого уберите опоры и добавьте перенос в новую ситуацию."]],"prompt":{"T":"Разработай три варианта задания: базовый, средний и продвинутый. Исходное задание: [текст]. Все варианты проверяют один результат: [формулировка].","R":"Ты опытный учитель [предмет], который применяет дифференцированное обучение.","A":"Учащиеся [класс или курс] с разным уровнем подготовки; часть из них испытывает трудности с [чтением условий / вычислениями / аргументацией].","C":"Для каждого уровня: текст задания, опора или подсказка (для базового), эталонный ответ, 1–2 типичные ошибки. В конце таблица: чем уровни различаются по когнитивной сложности.","I":"Все учащиеся должны работать на один результат, но с разной поддержкой. Варианты я проверю и решу сам(а) перед занятием."},"checks":["все варианты проверяют один результат","решения проверены вручную","базовый вариант не сведён к угадыванию","формулировки понятны без пояснений"],"stop":["меняется проверяемый результат","в продвинутом варианте просто больше вычислений"],"school":"Хорошо подходит для разноуровневой домашней работы.","students":"Попросите студентов определить по таксономии Блума, чем различаются уровни, и предложить свой четвёртый вариант."}]},{"id":"deepseek","code":"Ds","name":"DeepSeek","url":"https://chat.deepseek.com","group":"ai","ru":false,"ai":true,"level":"uni","what":"Китайская языковая модель с режимом рассуждений. Работает в России без VPN.","why":["пошаговые решения задач по математике и естественным наукам","сравнение с ответами российских моделей","разбор логики рассуждения"],"stations":["zadaniya","tyutor"],"facts":{"Происхождение":"зарубежный сервис"}},{"id":"neyroekspert","code":"Ne","name":"Нейроэксперт","url":"https://expert.ya.ru","group":"src","ru":true,"ai":true,"level":"both","what":"ИИ-ассистент Яндекса, который отвечает только по вашим источникам: файлам PDF, DOCX, PPTX и ссылкам на сайты. Из материалов собирается база знаний проекта.","why":["вопросы и задания к конкретным статьям и главам","краткие обзоры подборки литературы к теме","база знаний курса для студентов"],"stations":["soderzhanie","zadaniya","tyutor"],"facts":{"Вход":"Яндекс ID"},"routes":[{"title":"Подготовить вопросы к семинару по научным статьям","station":"soderzhanie","time":"30–40 мин","difficulty":2,"mode":"ИИ как инструмент педагога","need":"3–5 статей, которые вы сами прочитали","steps":[["Отберите источники","ИИ поможет работать с текстом, но не заменит выбора литературы. Статьи можно найти в КиберЛенинке и eLibrary."],["Создайте проект","Загрузите файлы или ссылки. Блок «Роль» из промпта можно сохранить как постоянную инструкцию проекта."],["Отправьте промпт","Обязательно просите ссылку на фрагмент к каждому вопросу: так вы сможете быстро проверить ответ."],["Проверьте по тексту","Откройте указанные фрагменты и уберите вопросы, которые не подтверждаются источником."]],"prompt":{"T":"По загруженным статьям составь 8 вопросов к семинару по теме «[тема]»: 3 на понимание, 3 на сравнение позиций авторов, 2 на перенос в практику.","R":"Ты ассистент преподавателя педагогики. Опираешься только на загруженные источники и не добавляешь внешних фактов.","A":"Магистранты, которые прочитали статьи заранее; часть из них работает в школе.","C":"Нумерованный список. К каждому вопросу: тип вопроса, статья и фрагмент (цитата до двух предложений), на который он опирается, и одна подсказка для преподавателя, если обсуждение остановится.","I":"Вопросы должны запустить дискуссию и заставить сопоставлять источники, а не пересказывать их. Ссылки на фрагменты нужны мне для проверки."},"checks":["каждый вопрос опирается на фрагмент","есть вопросы разных уровней","нет фактов вне загруженных статей","вопросы ведут к дискуссии"],"stop":["вопрос не опирается ни на один фрагмент","пересказ вместо проблемы","загружены файлы с данными студентов"],"school":"Подходит для смыслового чтения: загрузите текст из учебника и попросите вопросы трёх уровней.","students":"Режим «ИИ как тьютор»: студенты сами задают вопросы к статьям и проверяют, верно ли ИИ указал фрагмент."}]},{"id":"kiberleninka","code":"Cl","name":"КиберЛенинка","url":"https://cyberleninka.ru","group":"src","ru":true,"ai":false,"level":"uni","what":"Научная электронная библиотека статей в открытом доступе.","why":["подбор статей к теме курса","источники для заданий на анализ литературы","проверка ссылок, которые предложил ИИ"],"stations":["soderzhanie"],"facts":{"Доступ":"открытый"}},{"id":"elibrary","code":"El","name":"eLibrary","url":"https://elibrary.ru","group":"src","ru":true,"ai":false,"level":"uni","what":"Научная электронная библиотека, на её базе работает РИНЦ.","why":["поиск российских публикаций по теме","проверка, существует ли источник","обзор исследований для курса"],"stations":["soderzhanie"],"facts":{}},{"id":"vk-doska","code":"Vd","name":"VK Доска","url":"https://board.vk.company","group":"board","ru":true,"ai":false,"level":"both","what":"Онлайн-доска для совместной работы: стикеры, схемы, шаблоны.","why":["карта курса и согласование результатов, заданий и оценивания","групповая работа на занятии","мозговой штурм и рефлексия"],"stations":["struktura","sovmestno"],"facts":{"Стоимость":"бесплатно"},"routes":[{"title":"Собрать карту курса и проверить её согласованность","station":"struktura","time":"40–60 мин","difficulty":3,"mode":"без ИИ, проверка с ИИ","need":"сформулированные образовательные результаты (маршрут ГигаЧата)","steps":[["Нарисуйте три колонки","Образовательные результаты, учебные задания и оценивание. Каждый элемент на отдельном стикере, строки по модулям."],["Соедините стрелками","Свяжите каждый результат с заданием и способом проверки. Эту часть делайте сами, без ИИ."],["Попросите экспертизу","Перенесите содержимое доски в таблицу и отправьте промпт ГигаЧату или Алисе AI."],["Исправьте пробелы","Результат без задания или задание без результата показывает, что нужно переделать. Решение о правках принимаете вы."]],"prompt":{"T":"Проверь согласованность курса «[название]». Ниже результаты, задания и способы оценивания по модулям: [вставьте таблицу с доски].","R":"Ты эксперт по педагогическому дизайну, который проводит экспертизу рабочих программ дисциплин.","A":"Отчёт читает автор курса, преподаватель вуза, который будет вносить правки.","C":"Таблица несоответствий: элемент | проблема (результат без задания, задание без результата, критерий не проверяет результат, перегруженный модуль) | предложение по исправлению. Затем три главных вывода.","I":"Хочу найти пробелы до начала курса. Окончательное решение о правках принимаю сам(а)."},"checks":["у каждого результата есть задание","у каждого задания есть критерий","нагрузка распределена по модулям","доска открыта коллегам для комментариев"],"stop":["доска стала конспектом, а не картой связей","правки внесены без вашей проверки"],"school":"Используйте для тематического планирования: строки по урокам вместо модулей.","students":"Студенты собирают карту своего проекта курса и проводят взаимную экспертизу в парах."}]},{"id":"esbord","code":"Sb","name":"Эсборд","url":"https://sboard.online","group":"board","ru":true,"ai":false,"level":"both","what":"Российская онлайн-доска для учебных и рабочих встреч.","why":["совместная работа студентов в реальном времени","визуальные схемы к объяснению","карта курса"],"stations":["sovmestno","struktura","naglyadnost"],"facts":{"Стоимость":"есть бесплатный тариф"}},{"id":"unidraw","code":"Un","name":"Unidraw","url":"https://unidraw.io","group":"board","ru":true,"ai":false,"level":"both","what":"Российская онлайн-доска для схем и совместного рисования.","why":["схемы и диаграммы к объяснению","совместные карты понятий","визуальная рефлексия"],"stations":["naglyadnost","sovmestno"],"facts":{}},{"id":"shedevrum","code":"Sh","name":"Шедеврум","url":"https://shedevrum.ai","group":"board","ru":true,"ai":true,"level":"both","what":"Генератор изображений по текстовому описанию от Яндекса.","why":["иллюстрации к материалам и презентациям","визуальные кейсы для обсуждения","обсуждение со студентами, как ИИ искажает образы"],"stations":["naglyadnost"],"facts":{"Вход":"Яндекс ID"}},{"id":"yandex-formy","code":"Yf","name":"Яндекс Формы","url":"https://forms.yandex.ru","group":"quiz","ru":true,"ai":false,"level":"both","what":"Конструктор анкет, опросов и тестов с автоматической сводкой ответов.","why":["входная диагностика аудитории","тесты с автопроверкой","обратная связь после занятия"],"stations":["auditoriya","oprosy","otsenivanie"],"facts":{"Вход":"Яндекс ID у автора, респондентам не нужен"},"routes":[{"title":"Провести входную диагностику аудитории","station":"auditoriya","time":"30 мин + 10 мин на занятии","difficulty":1,"mode":"ИИ помогает педагогу, учащиеся без ИИ","need":"описание курса и того, что вы хотите узнать о группе","steps":[["Решите, что важно знать","Опыт, ожидания, уровень подготовки, предпочтительные форматы работы."],["Получите черновик анкеты","Отправьте промпт ГигаЧату или Алисе AI, затем сократите анкету до 8–10 вопросов."],["Соберите форму","Перенесите вопросы в Яндекс Формы и проведите анкету на первом занятии: 10 минут, чтобы ответили все."],["Используйте результаты","Покажите группе сводку и скажите, что вы измените в курсе по её итогам."]],"prompt":{"T":"Составь входную анкету из 8–10 вопросов для курса «[название]».","R":"Ты исследователь в области образования, который проектирует диагностические анкеты.","A":"Отвечать будут [магистранты / учащиеся N класса] в первую неделю курса, с телефона; на заполнение у них не больше 10 минут.","C":"Таблица: вопрос | тип (шкала 1–5, выбор, открытый) | варианты ответа | какое решение по курсу поможет принять ответ. Не больше двух открытых вопросов, без лишних персональных данных.","I":"По результатам я скорректирую темп, примеры и групповую работу, поэтому каждый вопрос должен влиять на конкретное решение по курсу."},"checks":["анкета занимает не больше 10 минут","нет лишних персональных данных","каждый вопрос влияет на решение по курсу","результаты показаны группе"],"stop":["анкету собрали, но не использовали","вопросы о том, что можно узнать иначе"],"school":"Для младших школьников: 4–5 вопросов с картинками-шкалами.","students":"Студенты проектируют анкету для своего будущего класса и обсуждают, какие решения она поможет принять."}]},{"id":"onlinetestpad","code":"Ot","name":"Online Test Pad","url":"https://onlinetestpad.com","group":"quiz","ru":true,"ai":false,"level":"both","what":"Конструктор тестов, опросов, кроссвордов и диалоговых тренажёров.","why":["тесты с разными типами вопросов","кроссворды и тренажёры","готовые материалы коллег"],"stations":["otsenivanie","praktika"],"facts":{"Стоимость":"есть бесплатный доступ"}},{"id":"udoba","code":"Ud","name":"Удоба","url":"https://udoba.org","group":"quiz","ru":true,"ai":false,"level":"both","what":"Российский конструктор интерактивных учебных упражнений.","why":["упражнения на соотнесение, классификацию, порядок","тренировка перед занятием","задания для самопроверки"],"stations":["praktika","zadaniya"],"facts":{}},{"id":"joyteka","code":"Jt","name":"Joyteka","url":"https://joyteka.com/ru","group":"quiz","ru":true,"ai":false,"level":"both","what":"Платформа для интерактивных заданий: видеоуроки с вопросами, квесты, викторины.","why":["задания к видео","квесты-повторения","викторины на занятии"],"stations":["zadaniya","praktika","oprosy"],"facts":{}},{"id":"meanchart","code":"Mc","name":"Meanchart","url":"https://meanchart.ru","group":"quiz","ru":true,"ai":false,"level":"both","what":"Сервис интерактивных опросов в реальном времени, российский аналог Mentimeter.","why":["облака слов и голосования на лекции","проверка понимания по ходу занятия","анонимные вопросы аудитории"],"stations":["oprosy"],"facts":{}},{"id":"vznaniya","code":"Vz","name":"Взнания","url":"https://vznaniya.ru","group":"quiz","ru":true,"ai":false,"level":"school","what":"Конструктор интерактивных материалов к урокам с библиотекой готовых заданий.","why":["тренировка лексики и понятий","домашние задания с автопроверкой","готовые задания коллег"],"stations":["praktika","zadaniya"],"facts":{}},{"id":"stepik","code":"St","name":"Stepik","url":"https://stepik.org","group":"plat","ru":true,"ai":false,"level":"both","what":"Платформа для создания онлайн-курсов с автоматической проверкой заданий.","why":["онлайн-курс или модуль к очному курсу","задания с автопроверкой, в том числе код","учебные классы и отслеживание прогресса"],"stations":["struktura","praktika","otsenivanie"],"facts":{}},{"id":"sferum","code":"Sf","name":"Сферум","url":"https://sferum.ru","group":"plat","ru":true,"ai":false,"level":"school","what":"Образовательная платформа для общения учителей, учеников и родителей: чаты и звонки.","why":["чаты классов и учебных групп","онлайн-занятия","объявления для родителей"],"stations":["onlayn"],"facts":{}},{"id":"buildin","code":"Bi","name":"Buildin","url":"https://buildin.ai","group":"plat","ru":true,"ai":false,"level":"uni","what":"Рабочее пространство для заметок, баз данных и страниц, российский аналог Notion.","why":["сайт курса с расписанием и материалами","база заданий и ресурсов","совместные страницы проектов студентов"],"stations":["struktura","sovmestno"],"facts":{}},{"id":"uchi-ru","code":"Ue","name":"Учи.ру","url":"https://uchi.ru","group":"plat","ru":true,"ai":false,"level":"school","what":"Онлайн-платформа с интерактивными курсами по школьным предметам.","why":["задания по школьной программе","диагностика и олимпиады","домашние задания с автопроверкой"],"stations":["praktika","otsenivanie"],"facts":{}},{"id":"telemost","code":"Tm","name":"Яндекс Телемост","url":"https://telemost.yandex.ru","group":"video","ru":true,"ai":false,"level":"both","what":"Сервис видеовстреч Яндекса.","why":["онлайн-занятия и консультации","защиты проектов онлайн","встречи с практиками"],"stations":["onlayn"],"facts":{"Вход":"Яндекс ID у организатора"}},{"id":"mts-link","code":"Ml","name":"МТС Линк","url":"https://mts-link.ru","group":"video","ru":true,"ai":false,"level":"uni","what":"Платформа для вебинаров, встреч и онлайн-досок.","why":["вебинары и лекции для больших групп","опросы и тесты в эфире","записи занятий"],"stations":["onlayn","oprosy"],"facts":{}},{"id":"vk-zvonki","code":"Vc","name":"VK Звонки","url":"https://calls.vk.com","group":"video","ru":true,"ai":false,"level":"both","what":"Сервис видеозвонков VK.","why":["консультации и встречи малых групп","подключение гостей по ссылке"],"stations":["onlayn"],"facts":{}}]};
+const ST = Object.fromEntries(DATA.stations.map(s => [s.id, s]));
+const LEVEL = { both: 'школа и вуз', school: 'школа', uni: 'вуз' };
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const STAR = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.9l-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>';
+const state = { persona: 'all', task: null, group: null, q: '', onlyRoutes: false, onlyAi: false };
+let store = { kit: [], tried: {}, used: {}, checks: {} };
+try { const s = JSON.parse(localStorage.getItem('katalog-v1') || 'null'); if (s) store = Object.assign(store, s); } catch (e) {}
+const save = () => { try { localStorage.setItem('katalog-v1', JSON.stringify(store)); } catch (e) {} };
+
+const fitsPersona = t => state.persona === 'all' || t.level === 'both' || t.level === state.persona;
+function matches(t) {
+  if (!fitsPersona(t)) return false;
+  if (state.task && !t.stations.includes(state.task)) return false;
+  if (state.group && t.group !== state.group) return false;
+  if (state.onlyRoutes && !(t.routes && t.routes.length)) return false;
+  if (state.onlyAi && !t.ai) return false;
+  if (state.q) {
+    const hay = [t.name, t.what, t.why.join(' '), t.stations.map(s => ST[s].name).join(' '), DATA.groups[t.group], (t.routes || []).map(r => r.title).join(' ')].join(' ').toLowerCase();
+    if (!hay.includes(state.q)) return false;
+  }
+  return true;
+}
+
+function renderStages() {
+  const lines = [['before', 'П', 'До занятия', 'проектирование'], ['during', 'З', 'Во время занятия', 'проведение']];
+  document.getElementById('stages').innerHTML = lines.map(([line, l, name, sub]) => {
+    const tasks = DATA.stations.filter(s => s.line === line).map(s => {
+      const tools = DATA.tools.filter(t => fitsPersona(t) && t.stations.includes(s.id));
+      const routes = DATA.tools.filter(fitsPersona).flatMap(t => (t.routes || [])).filter(r => r.station === s.id).length;
+      return `<button class="task" type="button" data-id="${s.id}" aria-pressed="${state.task === s.id}"><b>${esc(s.name)}</b><span>${tools.length} ${plural(tools.length, 'инструмент', 'инструмента', 'инструментов')}${routes ? ` · <span class="r">маршрут</span>` : ''}</span></button>`;
+    }).join('');
+    return `<div class="stage"><h3><i>${l}</i>${name} <small>${sub}</small></h3><div class="tasks">${tasks}</div>${line === 'during' ? '<div class="later">После занятия: обратная связь, анализ данных, рефлексия. Появится в следующем обновлении.</div>' : ''}</div>`;
+  }).join('');
+}
+const plural = (n, a, b, c) => { const m = n % 10, h = n % 100; return m === 1 && h !== 11 ? a : m >= 2 && m <= 4 && (h < 10 || h >= 20) ? b : c; };
+
+function tile(t, cls) {
+  const i = DATA.tools.indexOf(t) + 1;
+  return `<div class="tile g-${t.group} ${cls || ''}"><span>${String(i).padStart(2, '0')}</span><span class="sym">${t.code}</span><span>${t.ru ? 'RU' : ''}</span></div>`;
+}
+
+function renderGrid() {
+  const list = DATA.tools.filter(matches);
+  const grid = document.getElementById('grid');
+  grid.innerHTML = list.length ? list.map(t => `
+    <article class="card">
+      <div class="card-top">
+        ${tile(t)}
+        <div class="head">
+          <h3 class="name">${esc(t.name)}</h3>
+          <div class="badges">
+            ${t.ru ? '<span class="badge ru">российский</span>' : '<span class="badge">без VPN</span>'}
+            ${t.ai ? '<span class="badge ai">ИИ</span>' : ''}
+            ${t.routes ? '<span class="badge route">маршрут</span>' : ''}
+          </div>
+        </div>
+        <button class="star" type="button" data-star="${t.id}" aria-pressed="${store.kit.includes(t.id)}" aria-label="Добавить «${esc(t.name)}» в мой набор">${STAR}</button>
+      </div>
+      <p>${esc(t.what)}</p>
+      <div class="sts">${t.stations.map(s => `<span class="st">${esc(ST[s].name)}</span>`).join('')}</div>
+      <button class="open" type="button" data-open="${t.id}"><span>${t.routes ? 'Паспорт и маршрут' : 'Паспорт'}</span><span aria-hidden="true">→</span></button>
+    </article>`).join('') : '<p class="empty">Под эти условия ничего не подходит. Снимите один из фильтров или выберите другую задачу.</p>';
+  const taskName = state.task ? ` для задачи «<strong>${esc(ST[state.task].name)}</strong>»` : '';
+  document.getElementById('count').innerHTML = `Найдено: <strong>${list.length}</strong>${taskName}`;
+  document.querySelectorAll('#groups .chip').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.g === state.group)));
+}
+
+function renderKit() {
+  const el = document.getElementById('kit');
+  const tools = store.kit.map(id => DATA.tools.find(t => t.id === id)).filter(Boolean);
+  el.innerHTML = tools.length ? `<div class="kit-list">${tools.map(t => `<button class="kit-item" type="button" data-open="${t.id}">${tile(t)}<span>${esc(t.name)}</span>${store.used[t.id] ? '<em>использую</em>' : store.tried[t.id] ? '<em>попробовал(а)</em>' : ''}</button>`).join('')}</div>`
+    : '<p style="margin:6px 0 0;color:var(--muted);font-size:14px">Отмечайте звёздочкой инструменты, к которым хотите вернуться. Здесь же будет видно, что вы уже попробовали.</p>';
+}
+
+function promptText(p) { return DATA.traci.map(x => `${x.name}: ${p[x.k]}`).join('\n'); }
+
+function routeHtml(t, r, ri) {
+  const key = `${t.id}-${ri}`;
+  const done = (store.checks[key] || []).length;
+  return `
+    <p class="sub">Маршрут ${ri + 1} · станция «${esc(ST[r.station].name)}»</p>
+    <h3 class="route-title">${esc(r.title)}</h3>
+    <div class="rmeta">
+      <div><span>Время</span><b>${esc(r.time)}</b></div>
+      <div><span>Сложность</span><b>${'●'.repeat(r.difficulty)}${'○'.repeat(3 - r.difficulty)}</b></div>
+      <div><span>Режим ИИ</span><b>${esc(r.mode)}</b></div>
+      <div><span>Понадобится</span><b>${esc(r.need)}</b></div>
+    </div>
+    <div><p class="sub">Шаги</p><ol class="steps">${r.steps.map(s => `<li><div><b>${esc(s[0])}</b><span>${esc(s[1])}</span></div></li>`).join('')}</ol></div>
+    <div class="prompt"><p class="sub">Промпт по TRACI</p>
+      ${DATA.traci.map(x => `<div class="prow"><b>${x.k}</b><div><small>${x.name} · ${x.en}</small><span>${esc(r.prompt[x.k])}</span></div></div>`).join('')}
+      <button class="copy" type="button" data-copy="${key}">Скопировать промпт</button>
+    </div>
+    <div class="two">
+      <div class="checks"><p class="sub">Чек-лист результата</p>
+        ${r.checks.map((c, j) => `<label for="ck-${key}-${j}"><input type="checkbox" id="ck-${key}-${j}" data-check="${key}" data-j="${j}" ${(store.checks[key] || []).includes(j) ? 'checked' : ''}>${esc(c)}</label>`).join('')}
+        <div class="progress" id="pr-${key}">Выполнено: ${done} из ${r.checks.length}</div>
+      </div>
+      <div class="stop"><p class="sub">Стоп-сигналы</p>${r.stop.map(s => `<div>— ${esc(s)}</div>`).join('')}</div>
+    </div>
+    <div class="two vari">
+      <div><p class="sub">В школе</p>${esc(r.school)}</div>
+      <div><p class="sub">Со студентами</p>${esc(r.students)}</div>
+    </div>`;
+}
+
+let current = null;
+function openTool(id, tab) {
+  const t = DATA.tools.find(x => x.id === id);
+  if (!t) return;
+  current = t;
+  const tabs = [['p', 'Паспорт']].concat((t.routes || []).map((r, i) => ['r' + i, 'Маршрут ' + (i + 1)]));
+  const active = tab && tabs.some(x => x[0] === tab) ? tab : (t.routes ? 'r0' : 'p');
+  const facts = Object.assign({ 'Группа': DATA.groups[t.group], 'Для кого': LEVEL[t.level], 'Происхождение': t.ru ? 'российский сервис' : 'зарубежный, без VPN' }, t.facts);
+  const body = active === 'p' ? `
+    <div class="pp">
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div><p class="sub">Что это</p><p style="margin:0">${esc(t.what)}</p></div>
+        <div><p class="sub">Зачем преподавателю</p><ul>${t.why.map(w => `<li>${esc(w)}</li>`).join('')}</ul></div>
+        <div><p class="sub">Задачи</p><div class="sts">${t.stations.map(s => `<span class="st">${esc(ST[s].name)}</span>`).join('')}</div></div>
+      </div>
+      <div class="facts">${Object.entries(facts).map(([k, v]) => `<div><span>${esc(k)}</span><b>${esc(v)}</b></div>`).join('')}</div>
+    </div>` : routeHtml(t, t.routes[+active.slice(1)], +active.slice(1));
+  document.getElementById('dlgInner').innerHTML = `
+    <div class="dlg-head">
+      ${tile(t, 'big')}
+      <div style="min-width:0">
+        <p class="eyebrow" style="margin:0">${esc(DATA.groups[t.group])}</p>
+        <h2 id="dlgTitle">${esc(t.name)}</h2>
+        <a class="url" href="${t.url}" target="_blank" rel="noopener">${esc(t.url.replace(/^https:\/\//, ''))} ↗</a>
+      </div>
+      <button class="close" type="button" data-close aria-label="Закрыть">×</button>
+    </div>
+    <div class="dlg-body">
+      ${tabs.length > 1 ? `<div class="tabs" role="tablist">${tabs.map(([k, n]) => `<button class="tab" role="tab" type="button" data-tab="${k}" aria-selected="${k === active}">${n}</button>`).join('')}</div>` : ''}
+      ${body}
+      <div class="mark">
+        <button type="button" data-kit="${t.id}" aria-pressed="${store.kit.includes(t.id)}">★ В моём наборе</button>
+        <button type="button" data-tried="${t.id}" aria-pressed="${!!store.tried[t.id]}">Попробовал(а)</button>
+        <button type="button" data-used="${t.id}" aria-pressed="${!!store.used[t.id]}">Использую на занятиях</button>
+      </div>
+    </div>`;
+  const d = document.getElementById('dlg');
+  if (!d.open) { try { d.showModal(); } catch (e) { d.setAttribute('open', ''); } }
+  d.querySelector('.dlg-body').scrollTop = 0;
+}
+function closeDlg() {
+  const d = document.getElementById('dlg');
+  if (d.open) d.close();
+}
+document.getElementById('dlg').addEventListener('close', () => {
+  current = null;
+  if (location.hash) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+});
+
+function toggleKit(id) {
+  store.kit = store.kit.includes(id) ? store.kit.filter(x => x !== id) : store.kit.concat(id);
+  save(); renderGrid(); renderKit();
+}
+
+document.addEventListener('click', e => {
+  const el = e.target.closest('button, input');
+  if (!el) { if (e.target === document.getElementById('dlg')) closeDlg(); return; }
+  const ds = el.dataset;
+  if (el.classList.contains('task')) { state.task = state.task === ds.id ? null : ds.id; renderStages(); renderGrid(); document.getElementById('results').scrollIntoView({ block: 'start', behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' }); return; }
+  if (ds.persona !== undefined) return;
+  if (ds.g) { state.group = state.group === ds.g ? null : ds.g; renderGrid(); return; }
+  if (ds.star) { toggleKit(ds.star); return; }
+  if (ds.open) { openTool(ds.open); return; }
+  if (ds.close !== undefined) { closeDlg(); return; }
+  if (ds.tab) { openTool(current.id, ds.tab); return; }
+  if (ds.kit) { toggleKit(ds.kit); openTool(current.id, document.querySelector('.tab[aria-selected="true"]')?.dataset.tab); return; }
+  if (ds.tried) { store.tried[ds.tried] = !store.tried[ds.tried]; save(); renderKit(); el.setAttribute('aria-pressed', String(!!store.tried[ds.tried])); return; }
+  if (ds.used) { store.used[ds.used] = !store.used[ds.used]; save(); renderKit(); el.setAttribute('aria-pressed', String(!!store.used[ds.used])); return; }
+  if (ds.copy) {
+    const [id, ri] = ds.copy.split(/-(?=\d+$)/);
+    const text = promptText(DATA.tools.find(t => t.id === id).routes[+ri].prompt);
+    const ok = () => { el.textContent = 'Скопировано'; setTimeout(() => { el.textContent = 'Скопировать промпт'; }, 1800); };
+    const fb = () => { const r = document.createRange(); r.selectNodeContents(el.parentElement); const s = getSelection(); s.removeAllRanges(); s.addRange(r); el.textContent = 'Выделено: нажмите Ctrl+C'; };
+    try { navigator.clipboard.writeText(text).then(ok, fb); } catch (err) { fb(); }
+    return;
+  }
+});
+document.addEventListener('change', e => {
+  const el = e.target;
+  if (el.dataset && el.dataset.check) {
+    const key = el.dataset.check, j = +el.dataset.j;
+    const arr = new Set(store.checks[key] || []);
+    el.checked ? arr.add(j) : arr.delete(j);
+    store.checks[key] = [...arr]; save();
+    const [id, ri] = key.split(/-(?=\d+$)/);
+    const total = DATA.tools.find(t => t.id === id).routes[+ri].checks.length;
+    document.getElementById('pr-' + key).textContent = `Выполнено: ${arr.size} из ${total}`;
+  }
+});
+
+document.getElementById('persona').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  state.persona = b.dataset.v;
+  document.querySelectorAll('#persona button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  try { localStorage.setItem('katalog-persona', state.persona); } catch (err) {}
+  renderStages(); renderGrid();
+});
+document.getElementById('q').addEventListener('input', e => { state.q = e.target.value.trim().toLowerCase(); renderGrid(); });
+document.getElementById('onlyRoutes').addEventListener('change', e => { state.onlyRoutes = e.target.checked; renderGrid(); });
+document.getElementById('onlyAi').addEventListener('change', e => { state.onlyAi = e.target.checked; renderGrid(); });
+document.getElementById('clearTask').addEventListener('click', () => { state.task = null; renderStages(); renderGrid(); });
+document.getElementById('reset').addEventListener('click', () => {
+  Object.assign(state, { task: null, group: null, q: '', onlyRoutes: false, onlyAi: false });
+  document.getElementById('q').value = ''; document.getElementById('onlyRoutes').checked = false; document.getElementById('onlyAi').checked = false;
+  renderStages(); renderGrid();
+});
+
+function openHash() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  if (!id) return;
+  if (id === 'traci' || id === 'voprosy') { document.getElementById(id).scrollIntoView(); return; }
+  const m = id.match(/^(.*?)(?:-m(\d+))?$/);
+  if (DATA.tools.some(t => t.id === m[1])) openTool(m[1], m[2] ? 'r' + (+m[2] - 1) : null);
+}
+
+try { const p = localStorage.getItem('katalog-persona'); if (p) { state.persona = p; document.querySelectorAll('#persona button').forEach(x => x.setAttribute('aria-pressed', String(x.dataset.v === p))); } } catch (e) {}
+document.getElementById('upd').textContent = DATA.updated;
+document.getElementById('groups').innerHTML = Object.entries(DATA.groups).map(([g, n]) => `<button class="chip" type="button" data-g="${g}" aria-pressed="false"><span class="dot g-${g} ${g}"></span>${esc(n)}</button>`).join('');
+document.getElementById('traciRows').innerHTML = DATA.traci.map(x => `<div class="traci-row"><b class="l">${x.k}</b><div><b>${x.name}</b> <small>${x.en}</small><br><span style="color:var(--muted)">${x.hint}</span></div></div>`).join('');
+renderStages(); renderGrid(); renderKit(); openHash();
+window.addEventListener('hashchange', openHash);
+</script>
+
+</body>
+</html>
